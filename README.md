@@ -1,0 +1,1 @@
+# b2b-email-generator-go
