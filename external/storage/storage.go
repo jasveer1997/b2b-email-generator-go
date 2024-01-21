@@ -1,12 +1,9 @@
 package storage
 
 import (
-	"encoding/json"
 	"github.com/jasveer1997/b2b-email-generator-go/external/http"
 	"github.com/jasveer1997/b2b-email-generator-go/helpers"
 	gee "github.com/tbxark/g4vercel"
-	"log"
-	"os"
 	"strings"
 	"sync"
 )
@@ -20,32 +17,9 @@ type Storage struct {
 }
 
 func GetStorage() (IStorage, *helpers.HTTPError) {
-	var initializedUserDataSetEqToDB []StorageUser
-	var initializedDomainDataSetEqToDB []StorageDomain
-
-	// -- read json one time when server comes up and GetStorage() is called --
-	// user
-	jsonData, err := os.ReadFile("external/storage/static_initial_user_data.json")
-	if err != nil {
-		log.Fatalf("Error reading JSON file: %v", err)
-		return nil, helpers.InternalServerError("User JSON reading failed. See logs for more detail")
-	}
-	err = json.Unmarshal(jsonData, &initializedUserDataSetEqToDB)
-	if err != nil {
-		log.Fatalf("Error unmarshalling JSON: %v", err)
-		return nil, helpers.InternalServerError("User JSON unmarshalling failed. See logs for more detail")
-	}
-	// domain
-	jsonData, err = os.ReadFile("external/storage/static_initial_domain_data.json")
-	if err != nil {
-		log.Fatalf("Error reading JSON file: %v", err)
-		return nil, helpers.InternalServerError("Domain JSON reading failed. See logs for more detail")
-	}
-	err = json.Unmarshal(jsonData, &initializedDomainDataSetEqToDB)
-	if err != nil {
-		log.Fatalf("Error unmarshalling JSON: %v", err)
-		return nil, helpers.InternalServerError("Domain JSON unmarshalling failed. See logs for more detail")
-	}
+	// -- read static one time when server comes up and GetStorage() is called --
+	initializedUserDataSetEqToDB := userData
+	initializedDomainDataSetEqToDB := domainData
 
 	return &Storage{
 		Domains:    initializedDomainDataSetEqToDB,
