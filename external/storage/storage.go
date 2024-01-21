@@ -25,7 +25,7 @@ func GetStorage() (IStorage, *helpers.HTTPError) {
 
 	// -- read json one time when server comes up and GetStorage() is called --
 	// user
-	jsonData, err := os.ReadFile("static_initial_user_data.json")
+	jsonData, err := os.ReadFile("external/storage/static_initial_user_data.json")
 	if err != nil {
 		log.Fatalf("Error reading JSON file: %v", err)
 		return nil, helpers.InternalServerError("User JSON reading failed. See logs for more detail")
@@ -36,7 +36,7 @@ func GetStorage() (IStorage, *helpers.HTTPError) {
 		return nil, helpers.InternalServerError("User JSON unmarshalling failed. See logs for more detail")
 	}
 	// domain
-	jsonData, err = os.ReadFile("static_initial_domain_data.json")
+	jsonData, err = os.ReadFile("external/storage/static_initial_domain_data.json")
 	if err != nil {
 		log.Fatalf("Error reading JSON file: %v", err)
 		return nil, helpers.InternalServerError("Domain JSON reading failed. See logs for more detail")
