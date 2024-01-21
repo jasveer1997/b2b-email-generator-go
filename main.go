@@ -22,6 +22,7 @@ func main() {
 		//headers := r.Header
 		// reqContext := utils.ReqContextQueryParser(query, headers)
 
+		fmt.Println(r.URL.Query().Get("size"))
 		res, err := usecaseImpl.GetDomains(nil, http2.RequestPageContext{
 			From:       0,
 			Size:       10,
