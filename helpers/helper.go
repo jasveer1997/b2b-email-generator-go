@@ -2,8 +2,8 @@ package helpers
 
 import "strconv"
 
-func IsEmpty(str []string) bool {
-	if len(str) == 0 {
+func IsEmpty(str string) bool {
+	if str == "" {
 		return true
 	}
 	return false
