@@ -1,8 +1,0 @@
-{
-  "routes": [
-    {
-      "src": "/domains\\?(.*)",
-      "dest": "/api/domains?$1"
-    }
-  ]
-}

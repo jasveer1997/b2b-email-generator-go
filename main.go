@@ -3,12 +3,16 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	http2 "github.com/jasveer1997/b2b-email-generator-go/external/http"
 	"github.com/jasveer1997/b2b-email-generator-go/usecase"
+	"log"
 	"net/http"
 )
 
 func main() {
+	r := mux.NewRouter()
+
 	usecaseImpl, err := usecase.GetNewUsecaseImpl()
 	if err != nil {
 		panic(err.Error())
@@ -38,12 +42,6 @@ func main() {
 		}
 	}
 
-	http.HandleFunc("/domains", handler)
-
-	port := 8080
-	fmt.Printf("Server is running on http://localhost:%d\n", port)
-	err2 := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
-	if err2 != nil {
-		fmt.Println("Error starting server:", err2)
-	}
+	r.HandleFunc("/domains", handler).Methods(http.MethodGet)
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
