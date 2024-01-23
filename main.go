@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	http2 "github.com/jasveer1997/b2b-email-generator-go/external/http"
 	"github.com/jasveer1997/b2b-email-generator-go/usecase"
+	"github.com/rs/cors"
 	"net/http"
 )
 
@@ -43,6 +43,11 @@ func main() {
 		}
 	}
 
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},           // All origins
+		AllowedMethods: []string{"GET", "POST"}, // Allowing only get, just an example
+	})
+
 	r.HandleFunc("/domains", handler).Methods(http.MethodGet)
-	http.ListenAndServe(":8080", handlers.CORS()(r))
+	http.ListenAndServe(":8080", c.Handler(r))
 }
