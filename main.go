@@ -16,7 +16,7 @@ func main() {
 	ctx := context.Background()
 	corsHandler := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST"},
+		AllowedMethods: []string{"GET", "POST", "PUT"},
 	})
 
 	// initialize usecase layer
