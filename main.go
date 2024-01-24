@@ -1,53 +1,43 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"context"
 	"github.com/gorilla/mux"
-	http2 "github.com/jasveer1997/b2b-email-generator-go/external/http"
+	"github.com/jasveer1997/b2b-email-generator-go/routes"
 	"github.com/jasveer1997/b2b-email-generator-go/usecase"
 	"github.com/rs/cors"
+	"log"
 	"net/http"
 )
 
 func main() {
+	// initialize mux and ctx, cors (cors needed for separate FE, BE domains)
 	r := mux.NewRouter()
+	ctx := context.Background()
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST"},
+	})
 
-	usecaseImpl, err := usecase.GetNewUsecaseImpl()
+	// initialize usecase layer
+	usecaseImpl, err := usecase.GetNewUsecaseImpl(ctx)
 	if err != nil {
 		panic(err.Error())
 	}
-	handler := func(w http.ResponseWriter, r *http.Request) {
-		//query := r.URL.Query()
-		//headers := r.Header
-		// reqContext := utils.ReqContextQueryParser(query, headers)
 
-		fmt.Println(r.URL.Query().Get("size"))
-		res, err := usecaseImpl.GetDomains(nil, http2.RequestPageContext{
-			From:       0,
-			Size:       10,
-			Search:     "",
-			Authorizer: "someone",
-			Source:     "b2b-ui-app",
-		})
-		if err != nil {
-			fmt.Println("Error Response from server:", err.Error())
-		} else {
-			fmt.Println("Response from server:", res)
-			marshalledRes, errM := json.Marshal(res)
-			if errM != nil {
-				fmt.Println("Error marshalling Response from server:", errM.Error())
-			} else {
-				w.Write(marshalledRes)
-			}
-		}
+	// initialize route handlers
+	domainHandler := handler.GetDomainsHandler(ctx, usecaseImpl)
+	userHandler := handler.GetUsersHandler(ctx, usecaseImpl)
+	generateEmailHandler := handler.GetGenerateEmailHandler(ctx, usecaseImpl)
+
+	// routes definition
+	r.HandleFunc("/domains", domainHandler).Methods(http.MethodGet)
+	r.HandleFunc("/users", userHandler).Methods(http.MethodPost)
+	r.HandleFunc("/generate_email", generateEmailHandler).Methods(http.MethodPut)
+
+	// up the server
+	errInServer := http.ListenAndServe(":8081", corsHandler.Handler(r))
+	if errInServer != nil {
+		log.Fatalf("Failed to start server. Error: ", errInServer)
 	}
-
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},           // All origins
-		AllowedMethods: []string{"GET", "POST"}, // Allowing only get, just an example
-	})
-
-	r.HandleFunc("/domains", handler).Methods(http.MethodGet)
-	http.ListenAndServe(":8080", c.Handler(r))
 }

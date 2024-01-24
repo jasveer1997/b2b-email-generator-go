@@ -1,14 +1,14 @@
 package http
 
 import (
+	"context"
 	"github.com/jasveer1997/b2b-email-generator-go/helpers"
-	gee "github.com/tbxark/g4vercel"
 )
 
 type IUsecases interface {
-	GetDomains(ctx *gee.Context, reqContext RequestPageContext) (GetDomainsResponse, *helpers.HTTPError)
-	GetUsers(ctx *gee.Context, reqContext RequestPageContext) (GetUsersResponse, *helpers.HTTPError)
-	GenerateEmail(ctx *gee.Context, req GenerateEmailRequest) (User, *helpers.HTTPError)
+	GetDomains(ctx context.Context, reqContext RequestPageContext) (GetDomainsResponse, *helpers.HTTPError)
+	GetUsers(ctx context.Context, req GetUsersRequest, reqContext RequestPageContext) (GetUsersResponse, *helpers.HTTPError)
+	GenerateEmail(ctx context.Context, req GenerateEmailRequest) *helpers.HTTPError
 }
 
 type Pagination struct {
@@ -28,6 +28,11 @@ type RequestPageContext struct {
 type GetDomainsResponse struct {
 	Domains    []Domain   `json:"domains"`
 	Pagination Pagination `json:"pagination"`
+}
+
+// GetUsersRequest Filters
+type GetUsersRequest struct {
+	Domains []string `json:"domains"`
 }
 
 type GetUsersResponse struct {

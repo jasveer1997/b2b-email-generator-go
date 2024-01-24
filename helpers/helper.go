@@ -1,6 +1,8 @@
 package helpers
 
-import "strconv"
+import (
+	"strconv"
+)
 
 func IsEmpty(str string) bool {
 	if str == "" {
@@ -15,4 +17,13 @@ func ParseStrToInt32(str string) int32 {
 		return -1
 	}
 	return int32(i)
+}
+
+func ContainsMatchingDomain(arr []string, val string) bool {
+	for _, domain := range arr {
+		if domain == val {
+			return true
+		}
+	}
+	return false
 }

@@ -12,7 +12,7 @@ func ReqContextQueryParser(query url.Values, headers http.Header) http2.RequestP
 	if !helpers.IsEmpty(query.Get("from")) {
 		from = helpers.ParseStrToInt32(query.Get("from"))
 	}
-	size := int32(0)
+	size := int32(10)
 	if !helpers.IsEmpty(query.Get("size")) {
 		size = helpers.ParseStrToInt32(query.Get("size"))
 	}
@@ -22,11 +22,11 @@ func ReqContextQueryParser(query url.Values, headers http.Header) http2.RequestP
 	}
 	authorizer := ""
 	if !helpers.IsEmpty(query.Get("authorizer")) {
-		search = query.Get("authorizer")
+		authorizer = query.Get("authorizer")
 	}
 	source := ""
 	if !helpers.IsEmpty(query.Get("source")) {
-		search = query.Get("source")
+		source = query.Get("source")
 	}
 	return http2.RequestPageContext{
 		From:       from,
