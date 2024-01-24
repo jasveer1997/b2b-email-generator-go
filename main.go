@@ -36,7 +36,7 @@ func main() {
 	r.HandleFunc("/generate_email", generateEmailHandler).Methods(http.MethodPut)
 
 	// up the server
-	errInServer := http.ListenAndServe(":8081", corsHandler.Handler(r))
+	errInServer := http.ListenAndServe(":8080", corsHandler.Handler(r))
 	if errInServer != nil {
 		log.Fatalf("Failed to start server. Error: ", errInServer)
 	}
