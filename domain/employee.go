@@ -18,8 +18,12 @@ type Employee struct {
 }
 
 func GetStorageUserFromDomainUser(user Employee) storage.StorageUser {
+	firstName := user.FirstName
+	if !helpers.IsEmpty(user.MiddleName) {
+		firstName += " " + user.MiddleName
+	}
 	return storage.StorageUser{
-		FirstName: user.FirstName + " " + user.MiddleName,
+		FirstName: firstName,
 		LastName:  user.LastName,
 		Domain:    user.Domain,
 		Email:     user.Email,
